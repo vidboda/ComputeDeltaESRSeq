@@ -12,9 +12,6 @@ sub new {
 		'ref' => $ref,
 		'alt' => $alt,
 		'strand' => $strand,
-		#'start' => $start,
-		#'end' => $end,
-		#'seq' => $seq
 		};
 	bless ($self, $class);
 	return $self;
@@ -54,8 +51,6 @@ sub getSurroundings {
 	if ($client->responseCode() == 200) {
 		my $data = $client->responseContent();
 		if (length($data) == 11) {
-			#my $seq = $client->responseContent();
-			#print $client->responseContent();
 			if ($self->getStrand() eq '-') {
 				my $seqrev = reverse $data;
 				$seqrev =~ tr/acgtACGT/tgcaTGCA/;
