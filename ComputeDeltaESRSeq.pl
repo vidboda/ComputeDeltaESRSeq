@@ -28,7 +28,7 @@ my $p = Net::Ping->new();
 if (!defined($p->ping("togows.org", 1))) {die "\n togows.org is not reachable, please check your internet connection\n"}
 
 #deal with options
-my (%opts, $list, $genome,);
+my (%opts, $list, $genome,$path);
 getopts('l:g:', \%opts);
 
 if ((not exists $opts{'l'}) || ($opts{'l'} !~ /\.txt$/o) || (not exists $opts{'g'})  || $opts{'g'} !~ /hg(19|38)$/o) {
@@ -36,7 +36,8 @@ if ((not exists $opts{'l'}) || ($opts{'l'} !~ /\.txt$/o) || (not exists $opts{'g
 	exit
 }
 
-if ($opts{'l'} =~ /([^\/]+)\.txt$/o) {$list = $1} #get file path and prefix
+if ($opts{'l'} =~ /(.+)([^\/]+)\.txt$/o) {$path = $1.$2; $list = $2} #get file path and prefix
+elsif ($opts{'l'} =~ /([^\/]+)\.txt$/o) {$list = $1; $path = $1}
 if ($opts{'g'} =~ /hg(19|38)/) {$genome = "hg$1"}
 
 #two possible inputs
@@ -46,7 +47,7 @@ my %ESR;
 &main();
 
 sub main {
-	open F, "$list.txt" or die $!;
+	open F, "$path.txt" or die $!;
 	my ($chr, $pos, $start, $end, $strand, $sequence_obj);
 	while (my $line = <F>) {
 		if ($line !~ /^#/o) {#ignore comments
