@@ -3,6 +3,7 @@
 use strict;
 use Getopt::Std;
 use Net::Ping;
+use File::Basename;
 use modules::sequence;
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
@@ -28,7 +29,7 @@ my $p = Net::Ping->new();
 if (!defined($p->ping("togows.org", 1))) {die "\n togows.org is not reachable, please check your internet connection\n"}
 
 #deal with options
-my (%opts, $list, $genome,$path);
+my (%opts, $filename, $genome,$path);
 getopts('l:g:', \%opts);
 
 if ((not exists $opts{'l'}) || ($opts{'l'} !~ /\.txt$/o) || (not exists $opts{'g'})  || $opts{'g'} !~ /hg(19|38)$/o) {
@@ -36,10 +37,8 @@ if ((not exists $opts{'l'}) || ($opts{'l'} !~ /\.txt$/o) || (not exists $opts{'g
 	exit
 }
 
-if ($opts{'l'} =~ /(.+)([^\/]+)\.txt$/o) {$path = $1.$2; $list = $2} #get file path and prefix
-elsif ($opts{'l'} =~ /([^\/]+)\.txt$/o) {$list = $1; $path = $1}
+if ($opts{'l'}) {($filename, $path) = fileparse($opts{'l'}, qr/\.[^.]*/)}
 if ($opts{'g'} =~ /hg(19|38)/) {$genome = "hg$1"}
-
 #two possible inputs
 #chr	pos	ref	alt	strand
 #hgvs	strand
@@ -47,7 +46,7 @@ my %ESR;
 &main();
 
 sub main {
-	open F, "$path.txt" or die $!;
+	open F, $path.$filename.'.txt' or die $!;
 	my ($chr, $pos, $start, $end, $strand, $sequence_obj);
 	while (my $line = <F>) {
 		if ($line !~ /^#/o) {#ignore comments
@@ -57,15 +56,15 @@ sub main {
 				if ($input[1] =~ /^[\+-]$/o && $input[0] =~ /^(chr[\dXY]{1,2}):g\.(\d+)([ATGCatgc])>([ATCGatgc])$/o) {
 					$sequence_obj = sequence->new($1, $2, uc($3), uc($4), $input[1]);
 				}
-				else {die "ERROR: bad format for input $line in $list.txt $input[0] - $input[1]\n"}
+				else {die "ERROR: bad format for input $line in $filename.txt $input[0] - $input[1]\n"}
 			}
 			elsif ($#input == 4) {#chr pos case
 				if (($input[0] =~ /^chr[\dXY]{1,2}$/o || $input[0] =~ /^[\dXY]{1,2}$/o) && $input[1] =~ /^\d+$/o && $input[2] =~ /^[ATCGatgc]$/o && $input[3] =~ /^[ATCGatgc]$/o && $input[4] =~ /^[\+-]$/o) {
 					$sequence_obj = sequence->new($input[0], $input[1], $input[2], $input[3], $input[4]);
 				}
-				else {die "ERROR: bad format for input $line in $list.txt $input[0] $input[1] $input[2] $input[3] $input[4]\n"}
+				else {die "ERROR: bad format for input $line in $filename.txt $input[0] $input[1] $input[2] $input[3] $input[4]\n"}
 			}
-			else {die "ERROR: bad format for input $line in $list.txt $#input Don't forget the strand!!!!\n"}
+			else {die "ERROR: bad format for input $line in $filename.txt $#input Don't forget the strand!!!!\n"}
 			$sequence_obj->getSurroundings();			
 			print "Computing\t";
 			$sequence_obj->toPrint();
@@ -74,7 +73,7 @@ sub main {
 			$ESR{$sequence_obj->getChr()."-".$sequence_obj->getPos()."-".$sequence_obj->getRef()."-".$sequence_obj->getAlt()} = [$sequence_obj, $wtESR, $mtESR, $ESR];
 		}
 	}
-	open G, '>results/'.$list.'_ESR.txt' or die $!;
+	open G, '>results/'.$filename.'_ESR.txt' or die $!;
 	print G "#Chr\tPosition\tRef\tAlt\tHGVS\twtESR\tmtESR\tDeltaESR\n";
 	foreach my $key (sort(keys %ESR)) {
 		my $seq_obj = $ESR{$key}->[0];
