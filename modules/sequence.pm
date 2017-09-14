@@ -84,7 +84,7 @@ sub getSurroundings {
 
 sub toPrint {
 	my $self = shift;
-	print "\n".$self->getChr()." ".$self->getPos()." ".$self->getRef()." ".$self->getAlt()." ".$self->getStart()." ".$self->getEnd()." ".$self->getwtSeq()." ".$self->getmtSeq()."\n";
+	print $self->getChr()." ".$self->getPos()." ".$self->getRef()." ".$self->getAlt()." ".$self->getStart()." ".$self->getEnd()." ".$self->getwtSeq()." ".$self->getmtSeq()."\n";
 }
 
 sub compl {
