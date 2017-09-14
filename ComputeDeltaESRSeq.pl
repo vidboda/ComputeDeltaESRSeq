@@ -2,7 +2,6 @@
 
 use strict;
 use Getopt::Std;
-#use REST::Client;
 use Net::Ping;
 use modules::sequence;
 
@@ -22,10 +21,6 @@ $Getopt::Std::STANDARD_HELP_VERSION = 1;
 #	-done...
 #######
 
-#my ($HEXAMERS);
-#
-#if (-f 'data/hexamers.txt') {$HEXAMERS = "data/hexamers.txt"}
-#else {die "\nNo hexamer file in the data directory\n"}
 if (! -f 'data/hexamers.txt') {die "\nNo hexamer file in the data directory\n"}
 
 #check togows.org availability
@@ -48,10 +43,9 @@ if ($opts{'g'} =~ /hg(19|38)/) {$genome = "hg$1"}
 #chr	pos	ref	alt	strand
 #hgvs	strand
 my %ESR;
-&populate();
-#&main();
+&main();
 
-sub populate {
+sub main {
 	open F, "$list.txt" or die $!;
 	my ($chr, $pos, $start, $end, $strand, $sequence_obj);
 	while (my $line = <F>) {
@@ -88,16 +82,6 @@ sub populate {
 	}
 	close G;
 }
-
-#sub main {
-#	foreach my $variant (sort(keys %objects)) {
-#		my $obj = $objects{$variant};
-#		#$obj->toPrint();
-#		for (my $i = 0;$i < 6;$i++) {
-#			
-#		}
-#	}
-#}
 
 
 exit;
