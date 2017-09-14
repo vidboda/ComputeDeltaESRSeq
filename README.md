@@ -9,7 +9,7 @@ To run the script you need Perl and the CPAn module REST::Client, and an active 
 ## Run
 
 ```bash
-perl -T ComputeDeltaESRSeq.pl -l path/to/variant_list.txt -g genome_version
+perl ComputeDeltaESRSeq.pl -l path/to/variant_list.txt -g genome_version
 ```
 
 * -l txt file, list of variants
