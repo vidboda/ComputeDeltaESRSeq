@@ -46,6 +46,8 @@ Output is a tabulated file with variants (sorted), ESR WT, ESR mutant, Delta ESR
 
 Providing exonic positions is your responsibility!!!
 
+Works only for substitutions
+
 ## Credits
 
 This script uses togoWS web services, http://togows.org/
