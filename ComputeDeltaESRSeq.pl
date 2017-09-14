@@ -39,8 +39,6 @@ if ((not exists $opts{'l'}) || ($opts{'l'} !~ /\.txt$/o) || (not exists $opts{'g
 if ($opts{'l'} =~ /([^\/]+)\.txt$/o) {$list = $1} #get file path and prefix
 if ($opts{'g'} =~ /hg(19|38)/) {$genome = "hg$1"}
 
-print $list;exit;
-
 #two possible inputs
 #chr	pos	ref	alt	strand
 #hgvs	strand
