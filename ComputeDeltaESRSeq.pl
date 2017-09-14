@@ -36,8 +36,10 @@ if ((not exists $opts{'l'}) || ($opts{'l'} !~ /\.txt$/o) || (not exists $opts{'g
 	exit
 }
 
-if ($opts{'l'} =~ /[\/]*(.+)\.txt$/o) {$list = $1} #get file path and prefix
+if ($opts{'l'} =~ /([^\/]+)\.txt$/o) {$list = $1} #get file path and prefix
 if ($opts{'g'} =~ /hg(19|38)/) {$genome = "hg$1"}
+
+print $list;exit;
 
 #two possible inputs
 #chr	pos	ref	alt	strand
@@ -53,10 +55,10 @@ sub main {
 			chomp($line);
 			my @input = split(/\t/, $line);
 			if ($#input == 1) {#hgvs case
-				if ($input[1] =~ /^[\+-]$/o && $input[0] =~ /(chr[\dXY]+):g\.(\d+)([ATGCatgc])>([ATCGatgc])/o) {
+				if ($input[1] =~ /^[\+-]$/o && $input[0] =~ /^(chr[\dXY]{1,2}):g\.(\d+)([ATGCatgc])>([ATCGatgc])$/o) {
 					$sequence_obj = sequence->new($1, $2, uc($3), uc($4), $input[1]);
 				}
-				else {die "ERROR: bad format for input $line in $list.txt\n"}
+				else {die "ERROR: bad format for input $line in $list.txt $input[0] - $input[1]\n"}
 			}
 			elsif ($#input == 4) {#chr pos case
 				if (($input[0] =~ /^chr[\dXY]{1,2}$/o || $input[0] =~ /^[\dXY]{1,2}$/o) && $input[1] =~ /^\d+$/o && $input[2] =~ /^[ATCGatgc]$/o && $input[3] =~ /^[ATCGatgc]$/o && $input[4] =~ /^[\+-]$/o) {
@@ -64,7 +66,7 @@ sub main {
 				}
 				else {die "ERROR: bad format for input $line in $list.txt $input[0] $input[1] $input[2] $input[3] $input[4]\n"}
 			}
-			else {die "ERROR: bad format for input $line in $list.txt\n"}
+			else {die "ERROR: bad format for input $line in $list.txt $#input Don't forget the strand!!!!\n"}
 			$sequence_obj->getSurroundings();			
 			print "Computing\t";
 			$sequence_obj->toPrint();
