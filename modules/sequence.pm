@@ -112,6 +112,9 @@ sub ESR {
 	foreach (@wt_score) {$wtESR += $_}
 	foreach (@mt_score) {$mtESR += $_}
 	my $ESR = $mtESR - $wtESR;
+	$ESR = sprintf('%.3f', $ESR);
+	$wtESR = sprintf('%.3f', $wtESR);
+	$mtESR = sprintf('%.3f', $mtESR);
 	return ($wtESR, $mtESR, $ESR);
 }
 
