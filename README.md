@@ -4,7 +4,7 @@ A simple Perl script to compute DeltaESRSeq to predict exon skipping induced by 
 
 ## Installation
 
-To run the script you need Perl and the CPAn module REST::Client, and an active internet connection (the scripts uses togows.org REST service)
+To run the script you need Perl and the CPAN module REST::Client, and an active internet connection (the scripts uses togows.org REST service)
 
 ## Run
 
@@ -18,7 +18,11 @@ input format must be a file of format:
 
 *	either tabulated:
 
-Chr	Pos	Strand
+Chr	Pos	Ref	Alt Strand
+
+e.g.
+
+chrX    32481660        C       A	-
 
 *	or variants in HGVS genomic format plus the strand of interest, e.g.:
 
