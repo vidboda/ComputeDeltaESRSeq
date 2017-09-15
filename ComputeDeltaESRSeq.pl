@@ -18,7 +18,7 @@ $Getopt::Std::STANDARD_HELP_VERSION = 1;
 #######
 # the idea is to:
 #	-retrieve the surrouding sequence of the substitution using http://togows.org/api/ucsc/hg19/$chr:$x-$y" (we need 5 before and 5 after the variant)
-#	-compute 6 ESR scores for all hexamers overlapping the variant (wt and mut) using the hexamers.csv file adapted from Ke et al., 2011
+#	-compute 6 ESR scores for all hexamers overlapping the variant (wt and mut) using the hexamers.txt file adapted from Ke et al., 2011
 #	-done...
 #######
 
@@ -92,10 +92,10 @@ sub HELP_MESSAGE {
 ### input format must be a file of format:
 ### either tabulated:
 ### Chr	Pos	Strand
-### chr1	87466579	+
+### chr1	216420460	C	A	-
 ### or variants in HGVS genomic format plus the strand of interest, e.g.:
 ### Var	Strand
-### chr1:g.87466579C>T	+
+### chr1:g.216420460C>A	-
 ### -l txt file, list of variants
 ### -g genome version, hg19/hg38
 ### output is a tabulated file with variants (sorted), ESR WT, ESR mutant, Delta ESR
