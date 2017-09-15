@@ -23,6 +23,7 @@ $Getopt::Std::STANDARD_HELP_VERSION = 1;
 #######
 
 if (! -f 'data/hexamers.txt') {die "\nNo hexamer file in the data directory\n"}
+if (! -d 'results') {mkdir('results', '0755')}
 
 #check togows.org availability
 my $p = Net::Ping->new();
